@@ -26,12 +26,12 @@ jobs:
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       # Runs a set of commands using the runners shell
       - name: Docker cleanup
         run: docker system prune -fa
       - name: Runner upgrades
         run: |
-          brew bundle --global
+          brew bundle --file Brewfile
           brew upgrade
