@@ -34,5 +34,4 @@ jobs:
           docker system prune -fa
       - name: Runner upgrades
         run: |
-          omz update
           brew upgrade
