@@ -36,5 +36,5 @@ jobs:
         run: docker system prune -fa
       - name: Runner upgrades
         run: |
-          brew bundle --file Brewfile --no-lock
           brew upgrade
+          brew bundle --file Brewfile --no-lock
