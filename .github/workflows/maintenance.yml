@@ -32,5 +32,6 @@ jobs:
       - name: Cleanup docker and upgrade brew
         run: |
           docker system prune -fa
+          brew cleanup
           brew bundle install --file Brewfile --upgrade
 
