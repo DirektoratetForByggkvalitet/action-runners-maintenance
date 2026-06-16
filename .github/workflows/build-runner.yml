@@ -53,4 +53,4 @@ jobs:
         - name: Prune images
           if: always()
           run: |
-            container image prune --all
+            container image prune
