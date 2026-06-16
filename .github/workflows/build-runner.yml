@@ -50,4 +50,7 @@ jobs:
           run: |
             container image push ghcr.io/${{ github.repository }}/${{ env.imageName }}:latest
             container image push ghcr.io/${{ github.repository }}/${{ env.imageName }}:${{ github.sha }}
+        - name: Prune images
+          if: always()
+          run: |
             container image prune --all
