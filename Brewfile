@@ -1,4 +1,3 @@
-tap "homebrew/bundle"
 brew "lz4"
 brew "azure-cli"
 brew "php"
