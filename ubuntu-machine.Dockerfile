@@ -5,7 +5,7 @@ ENV container container
 RUN apt-get update && \
     apt-get install -y \
     dbus systemd openssh-server net-tools iproute2 iputils-ping \
-    curl wget vim-tiny man sudo nano bash uidmap \
+    curl wget vim-tiny man sudo nano bash uidmap jq \
     apt-transport-https ca-certificates curl gnupg lsb-release
 
 RUN >/etc/machine-id
@@ -31,6 +31,16 @@ RUN curl -o actions-runner-linux-x64-${runner_version}.tar.gz -L https://github.
     mkdir -p /opt/actions-runner && \
     tar xzf actions-runner-linux-x64-${runner_version}.tar.gz -C /opt/actions-runner && \
     rm actions-runner-linux-x64-${runner_version}.tar.gz
+
+# Crate a non-root user and add to sudo group
+RUN groupadd -u 1000 runner && \
+    useradd -m -u 1000 -g runner -s /bin/bash runner && \
+    usermod -aG sudo runner && \
+    usermod -aG docker runner && \
+    mkdir -p /etc/sudoers.d && \
+    echo "runner ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/runner && \
+    chmod 440 /etc/sudoers.d/runner && \
+    chown -R runner:runner /opt/actions-runner
 
 # Cleanup after installations
 RUN apt-get clean && \
