@@ -1,0 +1,42 @@
+name: 'Build runner image'
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+
+env:
+    imageName: ubuntu-runner 
+
+jobs:
+  build:
+    concurrency:
+      group: action-runner-${{ github.ref_name }}-build
+      cancel-in-progress: true
+    runs-on:
+      group: permanent-runners
+      labels:
+        - macOS
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Lås opp nøkkelring
+          run: security -v unlock-keychain -p ${{secrets.MACOS_KC_PASS}} ~/Library/Keychains/login.keychain-db
+
+        - name: Log in to ghcr.io
+          run: |
+            echo "${{ secrets.GITHUB_TOKEN }}" | container login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+        - name: Build image
+          run: |           
+            container build -t ${{ github.repository }}/${{ env.imageName }} .
+            container tag ${{ github.repository }}/${{ env.imageName }}:latest ghcr.io/${{ github.repository }}/${{ env.imageName }}:latest
+            container tag ${{ github.repository }}/${{ env.imageName }}:latest ghcr.io/${{ github.repository }}/${{ env.imageName }}:${{ github.sha }}
+        - name: Push image
+          run: |
+            container push ${{ github.repository }}/${{ env.imageName }}:latest
+            container push ${{ github.repository }}/${{ env.imageName }}:${{ github.sha }}
