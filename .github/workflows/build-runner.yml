@@ -27,6 +27,7 @@ jobs:
         - name: Setup container CLI
           run: |
             brew install container
+            printf 'y\n' | container system start
 
         - name: Lås opp nøkkelring
           run: security -v unlock-keychain -p ${{secrets.MACOS_KC_PASS}} ~/Library/Keychains/login.keychain-db
