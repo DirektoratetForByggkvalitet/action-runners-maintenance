@@ -33,8 +33,8 @@ RUN curl -o actions-runner-linux-x64-${runner_version}.tar.gz -L https://github.
     rm actions-runner-linux-x64-${runner_version}.tar.gz
 
 # Crate a non-root user and add to sudo group
-RUN groupadd -u 1000 runner && \
-    useradd -m -u 1000 -g runner -s /bin/bash runner && \
+RUN groupadd -g 1001 runner && \
+    useradd -m -u 1001 -g runner -s /bin/bash runner && \
     usermod -aG sudo runner && \
     usermod -aG docker runner && \
     mkdir -p /etc/sudoers.d && \
