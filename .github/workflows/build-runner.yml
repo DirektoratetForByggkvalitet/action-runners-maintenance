@@ -9,7 +9,8 @@ permissions:
   packages: write
 
 env:
-    imageName: ubuntu-machine 
+    imageName: ubuntu-machine
+    arch: "linux/amd64,linux/arm64"
 
 jobs:
   build:
@@ -41,11 +42,11 @@ jobs:
 
         - name: Build image
           run: |           
-            container build -t local/${{ env.imageName }} -f ${{ env.imageName }}.Dockerfile .
+            container build --platform ${{ env.arch }} -t local/${{ env.imageName }} -f ${{ env.imageName }}.Dockerfile .
         - name: Tag image
           run: |
-            container image tag local/${{ env.imageName }} ghcr.io/${{ github.repository }}/${{ env.imageName }}:latest
-            container image tag local/${{ env.imageName }} ghcr.io/${{ github.repository }}/${{ env.imageName }}:${{ github.sha }}
+            container image tag local/${{ env.imageName }} ghcr.io/${{ github.repository }}:${{ env.imageName }}
+            container image tag local/${{ env.imageName }} ghcr.io/${{ github.repository }}:${{ env.imageName }}-${{ github.sha }}
         - name: Push image
           run: |
             container image push ghcr.io/${{ github.repository }}/${{ env.imageName }}:latest
