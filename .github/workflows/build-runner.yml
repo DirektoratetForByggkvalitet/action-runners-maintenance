@@ -41,9 +41,9 @@ jobs:
 
         - name: Build image
           run: |           
-            container build -t ${{ github.repository }}/${{ env.imageName }} .
-            container image tag ${{ github.repository }}/${{ env.imageName }}:latest ghcr.io/${{ github.repository }}/${{ env.imageName }}:latest
-            container image tag ${{ github.repository }}/${{ env.imageName }}:latest ghcr.io/${{ github.repository }}/${{ env.imageName }}:${{ github.sha }}
+            container build -t local/${{ env.imageName }}:latest .
+            container image tag local/${{ env.imageName }}:latest ghcr.io/${{ github.repository }}/${{ env.imageName }}:latest
+            container image tag local/${{ env.imageName }}:latest ghcr.io/${{ github.repository }}/${{ env.imageName }}:${{ github.sha }}
         - name: Push image
           run: |
             container image push ghcr.io/${{ github.repository }}/${{ env.imageName }}:latest
