@@ -40,7 +40,6 @@ jobs:
 
         - name: Build image
           run: |
-            container image pull docker.io/library/ubuntu:latest
             container build --platform ${{ env.arch }} -t local/${{ env.imageName }} -f ${{ env.imageName }}.Dockerfile .
         - name: Tag image
           run: |
