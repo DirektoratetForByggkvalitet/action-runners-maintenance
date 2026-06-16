@@ -5,7 +5,7 @@ ENV container container
 RUN apt-get update && \
     apt-get install -y \
     dbus systemd openssh-server net-tools iproute2 iputils-ping \
-    curl wget vim-tiny man sudo nano bash \
+    curl wget vim-tiny man sudo nano bash uidmap \
     apt-transport-https ca-certificates curl gnupg lsb-release
 
 RUN >/etc/machine-id
@@ -22,7 +22,8 @@ RUN systemctl mask \
 RUN sed -i -e 's/^AcceptEnv LANG LC_\*$/#AcceptEnv LANG LC_*/' /etc/ssh/sshd_config
 
 # Install Docker and Azure CLI
-RUN curl -fsSL https://get.docker.com | sh
+RUN curl -fsSL https://get.docker.com | sh && \
+    apt-get install -y docker-ce-rootless-extras
 RUN curl -fsSL 'https://azurecliprod.blob.core.windows.net/$root/deb_install.sh' | bash
 
 ARG runner_version=2.335.1
