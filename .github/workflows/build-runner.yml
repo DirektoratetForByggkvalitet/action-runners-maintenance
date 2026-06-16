@@ -39,7 +39,8 @@ jobs:
             echo ${{ secrets.DOCKER_TOKEN }} | container registry login docker.io -u ${{ vars.DOCKER_USER }} --password-stdin
 
         - name: Build image
-          run: |           
+          run: |
+            container image pull docker.io/library/ubuntu:latest
             container build --platform ${{ env.arch }} -t local/${{ env.imageName }} -f ${{ env.imageName }}.Dockerfile .
         - name: Tag image
           run: |
