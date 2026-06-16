@@ -23,9 +23,11 @@ jobs:
     steps:
         - name: Checkout repository
           uses: actions/checkout@v4
-          
+
         - name: Setup container CLI
-          run: brew install container
+          run: |
+            brew install container
+            container system start
 
         - name: Lås opp nøkkelring
           run: security -v unlock-keychain -p ${{secrets.MACOS_KC_PASS}} ~/Library/Keychains/login.keychain-db
