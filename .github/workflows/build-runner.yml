@@ -1,4 +1,4 @@
-name: 'Build runner image'
+name: Build runner image
 
 on:
   workflow_dispatch:
@@ -52,10 +52,10 @@ jobs:
             container build --platform ${{ env.arch }} -t local/${{ env.imageName }} -f ${{ env.imageName }}.Dockerfile .
         - name: Tag image
           run: |
-            container image tag local/${{ env.imageName }}:latest ghcr.io/${{ lower(github.repository) }}:${{ env.imageName }}
+            container image tag local/${{ env.imageName }}:latest ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):${{ env.imageName }}
         - name: Push image
           run: |
-            container image push ghcr.io/${{ lower(github.repository) }}:${{ env.imageName }}
+            container image push ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):${{ env.imageName }}
         - name: Prune images
           if: always()
           run: |
