@@ -1,6 +1,7 @@
 FROM ubuntu:latest
 
 ENV container container
+ARG TARGETARCH
 
 RUN apt-get update && \
     apt-get install -y \
@@ -28,10 +29,15 @@ RUN curl -fsSL 'https://azurecliprod.blob.core.windows.net/$root/deb_install.sh'
 
 # Install GitHub Actions Runner
 ARG runner_version=2.335.1
-RUN curl -o actions-runner-linux-arm64-${runner_version}.tar.gz -L https://github.com/actions/runner/releases/download/v${runner_version}/actions-runner-linux-arm64-${runner_version}.tar.gz && \
+RUN case "${TARGETARCH}" in \
+        amd64) runner_arch=x64 ;; \
+        arm64) runner_arch=arm64 ;; \
+        *) echo "Unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
+    esac && \
+    curl -o actions-runner-linux-${runner_arch}-${runner_version}.tar.gz -L https://github.com/actions/runner/releases/download/v${runner_version}/actions-runner-linux-${runner_arch}-${runner_version}.tar.gz && \
     mkdir -p /opt/actions-runner && \
-    tar xzf actions-runner-linux-arm64-${runner_version}.tar.gz -C /opt/actions-runner && \
-    rm actions-runner-linux-arm64-${runner_version}.tar.gz && \
+    tar xzf actions-runner-linux-${runner_arch}-${runner_version}.tar.gz -C /opt/actions-runner && \
+    rm actions-runner-linux-${runner_arch}-${runner_version}.tar.gz && \
     /opt/actions-runner/bin/installdependencies.sh
 
 # Crate a non-root user and add to sudo group
