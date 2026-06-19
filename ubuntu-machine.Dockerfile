@@ -21,16 +21,18 @@ RUN systemctl mask \
 
 RUN sed -i -e 's/^AcceptEnv LANG LC_\*$/#AcceptEnv LANG LC_*/' /etc/ssh/sshd_config
 
-# Install Docker and Azure CLI
-RUN curl -fsSL https://get.docker.com | sh && \
-    apt-get install -y docker-ce-rootless-extras
+# Install Docker
+RUN curl -fsSL https://get.docker.com | sh
+# Install Azure CLI
 RUN curl -fsSL 'https://azurecliprod.blob.core.windows.net/$root/deb_install.sh' | bash
 
+# Install GitHub Actions Runner
 ARG runner_version=2.335.1
-RUN curl -o actions-runner-linux-x64-${runner_version}.tar.gz -L https://github.com/actions/runner/releases/download/v${runner_version}/actions-runner-linux-x64-${runner_version}.tar.gz && \
+RUN curl -o actions-runner-linux-arm64-${runner_version}.tar.gz -L https://github.com/actions/runner/releases/download/v${runner_version}/actions-runner-linux-arm64-${runner_version}.tar.gz && \
     mkdir -p /opt/actions-runner && \
-    tar xzf actions-runner-linux-x64-${runner_version}.tar.gz -C /opt/actions-runner && \
-    rm actions-runner-linux-x64-${runner_version}.tar.gz
+    tar xzf actions-runner-linux-arm64-${runner_version}.tar.gz -C /opt/actions-runner && \
+    rm actions-runner-linux-arm64-${runner_version}.tar.gz && \
+    /opt/actions-runner/bin/installdependencies.sh
 
 # Crate a non-root user and add to sudo group
 RUN groupadd -g 1001 runner && \
