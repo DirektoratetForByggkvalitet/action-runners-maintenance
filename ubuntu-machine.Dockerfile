@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-ENV container container
+ENV container=container
 ARG TARGETARCH
 
 RUN apt-get update && \
