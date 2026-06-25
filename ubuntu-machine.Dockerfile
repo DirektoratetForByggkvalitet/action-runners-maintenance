@@ -41,7 +41,6 @@ RUN case "${TARGETARCH}" in \
     /opt/actions-runner/bin/installdependencies.sh
 
 # Crate a non-root user and add to sudo group
-ARG TZ="Europe/Oslo"
 RUN groupadd -g 1001 runner && \
     useradd -m -u 1001 -g runner -s /bin/bash runner && \
     usermod -aG sudo runner && \
@@ -49,12 +48,13 @@ RUN groupadd -g 1001 runner && \
     mkdir -p /etc/sudoers.d && \
     echo "runner ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/runner && \
     chmod 440 /etc/sudoers.d/runner && \
-    chown -R runner:runner /opt/actions-runner && \
-    timedatectl set-timezone ${TZ}
+    chown -R runner:runner /opt/actions-runner
 
 
 # Cleanup after installations
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+ARG TZ="Europe/Oslo"
+ENV TZ=${TZ}
 ENV RUNNER_VERSION=${runner_version}
