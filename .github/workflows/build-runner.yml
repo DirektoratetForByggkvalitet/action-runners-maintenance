@@ -9,7 +9,7 @@ permissions:
   packages: write
 
 env:
-    imageName: ubuntu-machine
+    imageTag: ubuntu-machine
     arch: "linux/arm64"
 
 jobs:
@@ -51,14 +51,14 @@ jobs:
               ghcr.io/${{ github.repository }}
             # generate Docker tags based on the following events/attributes
             tags: |
-              type=raw,value=${{ env.imageName }}
+              type=raw,value=${{ env.imageTag }}
               # Kort SHA > 'sha-xxxxxx'
-              type=sha,prefix=${{ env.imageName }}-,format=short
+              type=sha,prefix=${{ env.imageTag }}-,format=short
 
         - name: Oppsett av Docker Buildx
           uses: docker/setup-buildx-action@v4
           with:
-            name: ${{ env.imageName }}-builder
+            name: ${{ env.imageTag }}-builder
             driver: docker-container
 
         - name: Bygg og push
